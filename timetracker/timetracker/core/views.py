@@ -1,6 +1,6 @@
-from flask import Blueprint, redirect,url_for, render_template, flash, abort
+from flask import Blueprint, redirect,url_for, render_template, flash, abort, request
 from ..models import Task,Employee
-from .forms import TaskForm
+from timetracker import db
 from timetracker.models import Project
 from flask_login import login_required, current_user
 
@@ -26,15 +26,13 @@ def tasklist(project_id):
     project = Project.query.get(project_id)
     department = project.department_belong_to
 
-    form = TaskForm()
     tasks = project.tasks
-    if form.validate_on_submit():
-        newtask = Task(name=form.name.data)
+    if request.method == "POST":
+        newtask = Task(name=request.form.get("task-name"))
         newtask.project_id = project.id
-        assignee = Employee.query.filter_by(emp_id = form.assignee.data).first()
-
+        assignee = Employee.query.filter_by(emp_id = request.form.get("assignee")).first()
         if not assignee or assignee.department_id != department.id:
-            flash(f'Employee with ID {form.assignee.data} not found in this Department.')
+            flash(f'Employee with ID {request.form.get("assignee")} not found in this Department.')
             return redirect(url_for("core.tasklist", project_id=project_id))
 
         newtask.assignee = assignee.emp_id
@@ -46,4 +44,17 @@ def tasklist(project_id):
             flash('Oops: Something went wrong, Please try again.')
 
         return redirect(url_for("core.tasklist",  project_id=project_id))
-    return render_template("core/tasklist.html", form= form, tasks = tasks, title=project.name)
+    return render_template("core/tasklist.html", project=project, tasks = tasks, title=project.name)
+
+@core.route("/project/delete/<int:id>", methods=["GET", "POST"])
+@login_required
+def delete_project(id):
+    if request.method == "POST":
+        project = Project.query.get(id)
+        for tk in project.tasks:
+            task = Project.query.get(tk.id)
+            db.session.delete(task)
+            db.session.commit()
+        db.session.delete(project)
+        db.session.commit()
+    return redirect (url_for("users.dashboard"))

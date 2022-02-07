@@ -1,70 +1,61 @@
-{% import "bootstrap/utils.html" as utils %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block title %}Departments{% endblock %}
-{% block body %}
-<div class="content-section">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <br/>
-        {{ utils.flashed_messages() }}
-        {% if form.name.errors %}
-            <ul class="errors">
-            {% for error in form.name.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        <br/>
-        <h1 style="text-align:center;">Department: {{department.name}}</h1>
 
-          <hr class="intro-divider">
-          <div class="center">
-             <div class="table-responsive">
-                 <div class="table-wrapper">
-                      <div class="table-title">
-                            <div class="row">
-                                <div class="col-sm-8"><h2>Projects <b>{{ projects|length}}</b></h2></div>
-                                    <div class="col-sm-4">
-                                    <button type="button" class="btn btn-info add-new" onclick="enableform()"><i class="fa fa-plus"></i> Add New</button>
-                                    </div>
-                                </div>
-                      </div>
-                      <table class="table table-striped table-bordered">
-                        <thead>
-                          <tr>
-                            <th width="30%"> Title </th>
-                            <th width="30%"> Project Manager </th>
-                            <th width="30%"> Created On </th>
-                            <th width="10%"> Action </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        {% for project in projects %}
-                              <tr>
-                                <td> {{ project.name }} </td>
-                                <td> {{ project.project_manager }} </td>
-                                <td>{{ project.date }} </td>
-                                <td>
-                                  <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                  <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                                </td>
-                              </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                     <div id="newform" class="hide">
-                        {{ wtf.quick_form(form) }}
-                     </div>
-                   </div>
-               </div>
+{% block content %}
+<div class="container-fluid">
+     <div class="container cards-container">
+        <h1 class="page-heading"> <b>Projects in {{ department.name }}</b></h1>
+
+        <table class="table caption-top table-hover">
+            <caption>List of Projects</caption>
+            <thead>
+                <tr class="table-dark">
+                  <th scope="col">Name</th>
+                  <th scope="col">Manager</th>
+                  <th scope="col">Date Created</th>
+                </tr>
+            </thead>
+          <tbody>
+
+          {% for project in projects %}
+              <tr>
+                <td> {{ project.name }} </td>
+                <td> {{ project.project_manager }} </td>
+                <td>{{ project.date }} </td>
+              </tr>
+         {% endfor %}
+
+          </tbody>
+        </table>
+         <div class = "container">
+             <div class = "row">
+                 <div class="col-lg-8"></div>
+                 <div class="col-lg-2">
+                     <button type="button" class="btn btn-dark add-new" onclick="enableform()">Add New project</button>
+                 </div>
+                 <div class="col-lg-2">
+                     <form method="POST" onsubmit="return confirm('Projects under this department will also be deleted ! Still want to continue? ');" action="delete/{{ department.id }}">
+                     <button type="submit" class="btn btn-dark add-new" >Delete department</button>
+                     </form>
+                 </div>
+             </div>
+         </div>
+          <div class="data-adding-form hide">
+              <form method="post" enctype="application/x-www-form-urlencoded">
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">project Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="name" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">Please enter a new project name to add.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="Managername" class="form-label">Manager Emp ID</label>
+                    <input type="text" class="form-control" id="Managername" name="manager-id" aria-describedby="emailHelp">
+                  </div>
+                  <button type="submit" class="btn btn-dark submit">Submit</button>
+                  <button class="btn btn-dark submit cancel" onclick="closeform()">Cancel</button>
+             </form>
           </div>
 
-        </div>
-      </div>
     </div>
-  </div>
 </div>
-<script src="{{url_for('static', filename='scripts/myscripts.js')}}"></script>
-{% endblock %}
+
+{% endblock content%}

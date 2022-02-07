@@ -1,18 +1,16 @@
 from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask_login import login_user, login_required, logout_user,current_user
 from timetracker.models import Employee, Project
-from .forms import LoginForm
+
 
 
 users = Blueprint('users', __name__)
 
 @users.route("/login/", methods=["GET", "POST"])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        id = form.emp_id.data
-        password = form.password.data
-
+    if request.method == "POST":
+        id = request.form.get("empid")
+        password = request.form.get("password")
         user = Employee.query.filter_by(emp_id=id).first()
         if user !=None and user.check_password(password):
             login_user(user, remember=True)
@@ -22,8 +20,7 @@ def login():
                 return redirect(url_for('users.dashboard'))
         else:
             flash('Invalid email or password.')
-
-    return render_template("users/login.html",  form=form, title='Register')
+    return render_template("users/login.html", title='Login')
 
 @users.route('/logout')
 @login_required
@@ -52,4 +49,4 @@ def dashboard():
                 employees.append(assignee)
     reporting_employees = [Employee.query.filter_by(emp_id=e).first() for e in employees ]
 
-    return render_template("users/dashboard.html", title="Dashboard", projects = projects, employees=reporting_employees)
+    return render_template("users/dashboard.html", title="Dashboard", projects = projects)
