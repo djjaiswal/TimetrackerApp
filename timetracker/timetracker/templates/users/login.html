@@ -1,16 +1,27 @@
-{% import "bootstrap/utils.html" as utils %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
-{% block body %}
-<div class="content-section">
-  <br/>
-  {{ utils.flashed_messages() }}
-  <br/>
-  <div class="center">
-    <h1>Login to your account</h1>
-    <br/>
-    {{ wtf.quick_form(form) }}
-  </div>
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="login-form">
+        <form method="post" enctype="application/x-www-form-urlencoded">
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Employee id</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" name="empid" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">Pleas enter employee id assigned by your organization.</div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" name= "password" id="exampleInputPassword1">
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Remember me</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
 </div>
-{% endblock %}
+
+{% endblock content %}

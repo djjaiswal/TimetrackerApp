@@ -1,73 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>{{ title }} | Timetracker</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-        <div class="container topnav">
-          <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand topnav" href="{{ url_for('core.homepage') }}">TimeTracker</a>
-          </div>
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<section id="header">
+    <div id="gloablnav">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+              <div class="container">
+                  <div class = "row">
+                      <div class="col-lg-6">
+                        {% if current_user.is_admin %}
+                        <a class="navbar-brand" href="{{ url_for('admin.admin_dashboard') }}"><b>Time Tracker</b></a>
+                         {% else %}
+                         <a class="navbar-brand" href="{{ url_for('users.dashboard') }}"><b>Time Tracker</b></a>
+                         {% endif %}
+                      </div>
+                      <div class="col-lg-5">
+                          <div class="navbar-nav">
+                          {% if current_user.is_authenticated %}
+                              {% if current_user.is_admin %}
+                                 <a class="nav-link active" aria-current="page" href="{{ url_for('admin.admin_dashboard') }}">Home</a>
+                                 <a class="nav-link active" aria-current="page" href="{{ url_for('admin.list_departments' ) }}">Departments</a>
+                                 <a class="nav-link active" href="{{ url_for('admin.list_employees') }}">Employees</a>
+                              {% else %}
+                                 <a class="nav-link active" aria-current="page" href="{{ url_for('users.dashboard') }}">Home</a>
+                                 <a class="nav-link active" href="#">Projects</a>
+                                 <a class="nav-link active" href="#">Tasks</a>
+                              {% endif %}
 
-              <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_authenticated %}
-                  {% if current_user.is_admin %}
-                    <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('admin.list_departments') }}">Departments</a></li>
-                    <li><a href="{{ url_for('admin.list_employees') }}">Employees</a></li>
-                  {% else %}
-                    <li><a href="{{ url_for('users.dashboard') }}">Dashboard</a></li>
-                  {% endif %}
-                    <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
-                    <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.emp_id }}!</a></li>
-                  {% else %}
-                    <li><a href="{{ url_for('core.homepage') }}">Home</a></li>
-                    <li><a href="{{ url_for('users.login') }}">Login</a></li>
-                  {% endif %}
-                </ul>
+                            <p class="greetings">Hi! {{ current_user.first_name }}<p/>
+                            {% endif %}
+                          </div>
+                      </div>
+                      <div class="col-lg-1">
+                          <a class="logout" href=" {{ url_for('users.logout') }}">Logout</a>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
-    </nav>
-    <div class="wrapper">
-      {% block body %}
-      {% endblock %}
-      <div class="push"></div>
+      </nav>
     </div>
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
+</section>
+<div class="container">
 
-                    <ul class="list-inline">
-                      <li><a href="{{ url_for('core.homepage') }}">Home</a></li>
-                      <li class="footer-menu-divider">⋅</li>
-                      {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
-                      {% else %}
-                        <li><a href="{{ url_for('users.login') }}">Login</a></li>
-                      {% endif %}
-                    </ul>
 
-                    <p class="copyright text-muted small">Copyright © 2020. All Rights Reserved</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+  {# get_flashed_messages() is auto sent to the template with the flash() call #}
+    {% for mess in get_flashed_messages()  %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+       <strong>{{mess}}</strong>
+       <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="close_flash()">
+       <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+</div>
+{% block content %}
+
+{% endblock %}
+
+<footer id= "footer" class="flex-shrink-0 py-4 bg-dark text-white-50">
+    <div class="container text-center">
+      <small>Copyright &copy; Your Website</small>
+    </div>
+  </footer>
+
+<script src="{{ url_for('static', filename='scripts/myscripts.js') }}" ></script>
+
 </body>
 </html>

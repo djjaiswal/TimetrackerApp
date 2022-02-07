@@ -1,18 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Admin Dashboard{% endblock %}
-{% block body %}
-<div class="intro-header">
-    <div class="container">
+
+{% block content %}
+<div class="container-fluid">
+    <div class="container cards-container">
+        <h1 class="page-heading"> <b>Dashboard</b></h1>
         <div class="row">
-            <div class="col-lg-12">
-                <div class="intro-message">
-                    <h1>Admin Dashboard</h1>
-                    <h3>Secured for administrators only!</h3>
-                    <hr class="intro-divider">
-                    </ul>
+             <div class="col-lg-4">
+                 <div class="card-holder">
+                     <img src="{{ url_for('static', filename='images/departments.png') }}" class="card-img">
+                     <a  href="{{ url_for('admin.list_departments' ) }}">
+                     <div class="overlay">
+                         <div class="number"><b>{{ dep }}</b></div>
+                         <div class="text value">Departments</div>
+                     </div>
+                     </a>
+                </div>
+             </div>
+            <div class="col-lg-4">
+                 <div class="card-holder">
+                     <img src="{{ url_for('static', filename='images/emp.jpeg') }}" class="card-img">
+
+                     <a  href="{{ url_for('admin.list_employees') }}">
+                      <div class="overlay">
+                         <div class="number"><b>{{ emp }}</b></div>
+                         <div class="text value">Employees</div>
+                     </div>
+                     </a>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <div class="card-holder">
+                     <img src="{{ url_for('static', filename='images/project.jpeg') }}" class="card-img">
+                      <a  href="{{ url_for('admin.list_departments') }}">
+                         <div class="overlay">
+                             <div class="number"><b>{{ proj }}</b></div>
+                             <div class="text value">Projects</div>
+                         </div>
+                      </a>
+                </div>
+
+            </div>
+
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content%}

@@ -1,16 +1,43 @@
-{% import "bootstrap/utils.html" as utils %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
-{% block body %}
-<div class="content-section">
-  <br/>
-  {{ utils.flashed_messages() }}
-  <br/>
-  <div class="center">
-    <h1>Add a new employee </h1>
-    <br/>
-    {{ wtf.quick_form(form) }}
-  </div>
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="login-form">
+        <form method="post" enctype="application/x-www-form-urlencoded">
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Employee id</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" name="empid" aria-describedby="emailHelp">
+
+          </div>
+           <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+          </div>
+           <div class="mb-3">
+            <label for="fname" class="form-label">First name</label>
+            <input type="text" class="form-control" id="fname" name="fname" aria-describedby="emailHelp">
+          </div>
+         <div class="mb-3">
+            <label for="lname" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="lname" name="lname" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+              <label for="deps">Department</label>
+              <select class="form-select" aria-label="Default select example" id="deps" name="departments">
+              {% for item in departments %}
+                <option value={{item.id}}>{{item.name}}</option>
+              {% endfor %}
+             </select>
+          </div>
+          <div class="mb-3">
+            <label for="pass" class="form-label">Password</label>
+            <input type="password" class="form-control" id="pass" name="password" aria-describedby="emailHelp">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
 </div>
-{% endblock %}
+
+{% endblock content %}
