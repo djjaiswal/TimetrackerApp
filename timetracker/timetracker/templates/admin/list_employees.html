@@ -3,7 +3,8 @@
 {% block content %}
 <div class="container-fluid">
      <div class="container cards-container">
-        <h1 class="page-heading"> <b>Employees</b></h1>
+        <h1 class="page-heading"> <b>{{ page_heading }}</b></h1>
+         {% if current_user.is_admin %}
          <div class = "container">
              <div class = "row">
                  <div class="col-lg-10"></div>
@@ -12,8 +13,9 @@
                  </div>
              </div>
          </div>
+         {% endif %}
         <table class="table caption-top table-hover">
-            <caption>List of Departments</caption>
+            <caption>List of Employees</caption>
             <thead>
                 <tr class="table-dark">
                   <th scope="col">#</th>

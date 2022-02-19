@@ -58,3 +58,34 @@ def delete_project(id):
         db.session.delete(project)
         db.session.commit()
     return redirect (url_for("users.dashboard"))
+
+@core.route("/reportingEmployees", methods=["GET", "POST"])
+@login_required
+def reporting_employee():
+    if_manager()
+    projects = Project.query.filter_by(project_manager=current_user.emp_id).order_by(Project.date.desc()).all()
+    employees = []
+
+    for p in projects:
+        tasks = p.tasks
+        for t in tasks:
+            assignee = t.assignee
+            if assignee not in employees:
+                employees.append(assignee)
+    reporting_employees = [Employee.query.filter_by(emp_id=e).first() for e in employees]
+    return render_template("admin/list_employees.html", employees= reporting_employees, page_heading = "Employees reporting to you")
+
+@core.route("/project/<int:project_id>/team", methods=["GET", "POST"])
+@login_required
+def project_team(project_id):
+    if_manager()
+    project = Project.query.get(project_id)
+    task = project.tasks
+    emp = []
+    for t in task:
+        assignee = t.assignee
+        if assignee not in emp:
+            emp.append(assignee)
+    team = [Employee.query.filter_by(emp_id=e).first() for e in emp]
+    return render_template("admin/list_employees.html", employees=team,
+                           page_heading=" Project Team")

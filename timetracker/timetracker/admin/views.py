@@ -12,16 +12,33 @@ def check_admin():
     """
     if not current_user.is_admin:
         abort(403)
-
+def validate(name="emp2"):
+    for i in name:
+        try:
+            int(i)
+            return False
+        except:
+            continue
+    return True
 
 @admin.route("/register", methods=["GET", "POST"])
 def register():
     check_admin()
 
     if request.method == "POST":
-        empid = request.form.get("empid")
+        emps = Employee.query.all()
+        id = emps[-1].emp_id
+        temp = int(id.split("0",1)[-1])+1
+        empid = "TT00"+str(temp)
         fname = request.form.get("fname")
+        if not validate(fname):
+            flash("First name must not contain numeric value.")
+            return redirect(url_for('admin.register'))
         lname = request.form.get("lname")
+        validate(lname)
+        if not validate(lname):
+            flash("Last name must not contain numeric value.")
+            return redirect(url_for('admin.register'))
         department = request.form.get("departments")
         password = request.form.get("password")
         email = request.form.get("email")
@@ -119,4 +136,4 @@ def departmentpage(id):
 def list_employees():
     check_admin()
     employees = Employee.query.all()
-    return render_template("admin/list_employees.html",employees=employees, title=" Employees")
+    return render_template("admin/list_employees.html",employees=employees, page_heading = "Employees",title=" Employees")
